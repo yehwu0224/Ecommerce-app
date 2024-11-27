@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Ecommerce_app.Models.Orders.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>訂單資訊</h3>
+<h5 class="text-muted mb-4">Home / Orders / Index</h5>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <table class="table" id="mytable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UserName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ReceiverName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TotalAmount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.OrderId)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.ReceiverName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.TotalAmount)
+                        </td>
+                        <td class="align-middle">
+                            @if (item.Status == 1)
+                            {
+                                <span>已付款</span>
+                            }
+                            else
+                            {
+                                <span>未付款</span>
+                            }
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Created_at)
+                        </td>
+                        <td class="align-middle">
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@item.OrderId">Details</a> 
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div> 
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready( function () {
+            $('#mytable').DataTable( {
+                "pageLength": 10,
+                "lengthMenu": [ 10, 25, 50 ]
+            }); 
+        } );
+        
+    </script>   
+}

@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ESadmin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ESadmin.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+</head>
+
+<body style="background-color: #f6f9ff;">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom fixed-top shadow-sm" style="box-shadow: 0 8px 10px -10px #888888;">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo1.jpg" class="mx-2" style="height: 25px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 d-flex justify-content-center">
+                        <li class="nav-item">
+                            <div class="search-box">
+                                <i class="bi bi-search text-secondary"></i>
+                                <input type="text" class="px-3 mx-2 text-sm-center border rounded text-secondary" style="width: 400px; border-color: #f6f9ff;">
+                            </div>
+                        </li>
+                    </ul>
+                    <partial name="/Areas/Identity/Views/Shared/_LoginPartialAdmin.cshtml" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-white sidebar collapse shadow-sm" style="box-shadow: 8px 0 10px -10px #999;">
+                <div class="position-sticky pt-3">
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                        <span>QUICK LINKS</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                <span data-feather="home"></span>
+                                主頁
+                            </a>
+                        </li>
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Products" asp-action="Create">
+                                <span data-feather="file-text"></span>
+                                新增產品資訊
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                        <span>CATALOG</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Products" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                產品資訊
+                            </a>
+                        </li>
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Variants" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                SKU
+                            </a>
+                        </li>
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Categories" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                產品類別
+                            </a>
+                        </li>
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Attributes" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                產品規格
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                        <span>SALE</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Orders" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                訂單資訊
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                        <span>CUSTOMERS</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item px-4">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Customers" asp-action="Index">
+                                <span data-feather="file-text"></span>
+                                客戶資料
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- main -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-5 m-0">
+                <!-- content -->
+                <main class="container mt-3 p-3 ">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="border-top footer text-muted">
+        <div class="col-md-3 col-lg-2"></div>
+        <div class="container col-md-9 col-lg-10 p-3" style="margin-right: 0;">
+            &copy; 2024 - Ecommerce-APP admin - <a asp-area="Admin" asp-asp-controller="Home" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

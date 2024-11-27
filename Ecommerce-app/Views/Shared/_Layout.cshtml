@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ecommerce_app</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Ecommerce_app.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo1.jpg" class="m-3" style="height: 40px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-2" asp-area="" asp-controller="Products" asp-action="Index" asp-route-filter="男裝">男裝</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark mx-2" asp-area="" asp-controller="Products" asp-action="Index" asp-route-filter="女裝">女裝</a>
+                        </li>
+                    </ul>
+                    <partial name="/Areas/Identity/Views/Shared/_LoginPartial.cshtml" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="w-100 p-4 border-top text-muted footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-3"><img src="~/images/logo1.jpg" class="m-3" style="height: 40px;"></div>
+            </div>
+            <div class="row">
+                <div class="col-3 mx-3">
+                    <div>Shop</div>
+                    <div>About</div>
+                    <div>Contact</div>
+                    <div class="mt-4">
+                        &copy; 2024 - Ecommerce_app - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div>FAQ</div>
+                    <div>Shipping & Returns</div>
+                    <div>Store Policy</div>
+                </div>
+                <div class="col-3">
+                    <div>Email: yehwu850224@gmail.com</div>
+                    <div>Tel: 123-456-7890</div>
+                </div>
+            </div>
+            
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

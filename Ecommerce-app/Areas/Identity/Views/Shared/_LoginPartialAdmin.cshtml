@@ -1,0 +1,35 @@
+﻿@using Ecommerce_app.Areas.Identity.Models
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<AppUser> signInManager
+@using Microsoft.AspNetCore.Http
+@{
+    string url = Context.Request.Path;
+}
+
+
+<ul class="navbar-nav">
+    @if (signInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @User.Identity!.Name!
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-action="Logout" asp-controller="Account">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="btn btn-outline-secondary px-3 mx-3" asp-area="" asp-controller="Cart" asp-action="Index" >購物車</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-controller="Account" asp-action="Login">登入</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,232 @@
+﻿@model Ecommerce_app.Models.ViewModels.DetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<p class="pt-4 text-muted">
+    ROUTE：
+    <a asp-action="Index" asp-controller="Home" class="text-muted">主頁</a> /
+    <a asp-action="Index" asp-controller="Products" asp-route-filter="@Model.Department" class="text-muted">@Model.Department</a> /
+    <a src="#">@Model.Name</a>
+</p>
+
+<div class="container mt-4">
+
+    <div class="row">
+        <div class="col-5 mx-auto d-flex flex-row">
+            <img src="@Html.DisplayFor(model => model.ImageStr)" class="mx-auto" style="max-height:400px;" />
+            <div class="" style="max-height:400px; overflow: auto;">
+                @foreach(var item in Model.Album!)
+                {
+                    <img src="@item" class="mx-2 mb-2" style="max-height:80px;" />
+                }
+            </div>
+        </div>
+
+        <div class="col-7">
+            <div class="row">
+                <div class="col">
+                    <p class="alert-light m-0">@Html.DisplayNameFor(model => model.Name)</p>
+                    <h3>@Html.DisplayFor(model => model.Name)</h3>
+                </div>
+                <div class="col text-end mx-3">
+                    <p class="alert-light m-0">@Html.DisplayNameFor(model => model.Price)</p>
+                    <h3>NT$@Html.DisplayFor(model => model.Price)</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <p class="alert-light m-0">@Html.DisplayNameFor(model => model.Description)</p>
+                    <pre style="white-space: pre-wrap;">@Html.DisplayFor(model => model.Description)</pre>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <p class="alert-light m-0">顏色：</p>
+                <div class="d-flex flex-row">
+                    @foreach(var item in Model.Colors!)
+                    {
+                        <label>
+                            <input type="radio" name="color" value="@item.Value" />
+                            <span><img src="@item.ImageStr" /></span>
+                        </label>
+
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <p class="alert-light m-0">尺寸：</p>
+                <div class="d-flex flex-row">
+                    <label>
+                        <input type="radio" name="size" value="XS" />
+                        <span>XS</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="S"  />
+                        <span>S</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="M"  />
+                        <span>M</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="L"  />
+                        <span>L</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="XL"  />
+                        <span>XL</span>
+                    </label>
+                </div>
+            </div>
+            
+            <form id="form" enctype="multipart/form-data">
+                <div class="row justify-content-between">
+                    <input type="hidden" id="sku" name="sku" value=""/>
+
+                    <div class="col-5">
+                        <p class="alert-light m-0">數量：</p>
+                        <div class="row align-items-end px-3">
+                            <select class="col form-select" name="quantity">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <pre class="col alert-light" id="code">請選擇規格</pre>
+                        </div>
+                    </div>
+                    
+                    <!--
+                        <input type="submit" class="btn btn-primary m-4 mb-0" id="AddtoCart" value="新增至購物車" disabled />
+                    -->
+                    <input type="button" class="col-5 btn btn-primary m-4 mb-0" id="AddtoCart" value="新增至購物車" onclick="Add2Cart(event)" disabled />
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+    <p></p>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">詳細內容</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment" type="button" role="tab" aria-controls="comment" aria-selected="false">留言評價</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="content-tab">
+            <div class="container pt-3">
+                <p class="alert-light m-0">@Html.DisplayNameFor(model => model.Content)</p>
+                @Html.Raw(Model.Content)
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="comment-tab">
+            ...
+        </div>
+
+    </div>
+
+</div>
+
+<p></p>
+
+<style>
+    label {
+        padding: 0;
+        margin-right: 3px;
+        cursor: pointer;
+    }
+
+    input[type=radio] {
+        width:20px;
+        height:20px;
+        display: none;
+    }
+
+        input[type=radio] + span {
+            display: inline-block;
+            background-color: white;
+            padding: 3px 6px;
+            color: black;
+            user-select: none; /* 防止文字被滑鼠選取反白 */
+        }
+
+        input[type=radio]:checked + span {
+            border: 2px solid black;
+        }
+
+        input[type=radio]:disabled + span {
+            color: gray;
+            background-color: white;
+            border: 1px dashed gray;
+        }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).on('change', "input[name=size], input[name=color]", function () {
+            var size = $('input[name=size]:checked').val();
+            var color = $('input[name=color]:checked').val();
+
+            if ($('input[name=size]').is(':checked') && $('input[name=color]').is(':checked')) {
+                
+                var values = { id: @Model.Id, size: size, color: color }
+                $.getJSON("/Products/GetSKU", values, function (data) {
+                    if (data != "尚無庫存") {
+                        $("#AddtoCart").prop('disabled', false);
+                    }
+                    else {
+                        $("#AddtoCart").prop("disabled", true);
+                    }
+                    $("#code").text(data);
+                    $('#sku').val(data);
+                });
+            }
+        });
+
+        function Add2Cart(e) {
+            let url = location.origin;
+            let formData = $("#form").serialize();
+            $.ajax({
+                type: 'POST',
+                url: url + "/api/Cart/AddtoCart",
+                data: formData,
+                success: function (res) {
+                    toastr.success("商品已加入購物車！");
+                },
+                error: function (err) {
+                    toastr.error("商品加入購物車失敗, " + err.responseText);
+                }
+            });
+        };
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+    </script>
+}

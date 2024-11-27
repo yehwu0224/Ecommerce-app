@@ -1,0 +1,65 @@
+﻿@model Ecommerce_app.Areas.Admin.Models.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h3>產品詳細資訊</h3>
+<h5 class="text-muted mb-4">Home / Products / Details</h5>
+<hr />
+
+<p>
+    <a asp-action="Create" asp-controller="Variants" asp-route-productId="@Model?.Id" class="btn btn-sm btn-primary px-3">新增庫存單元(SKU)</a>
+</p>
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.Raw(Model?.Content)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageStr)
+        </dt>
+        <dd class = "col-sm-10">
+            <!--@Html.DisplayFor(model => model.ImageStr)-->
+            <img src="@Html.DisplayFor(model => model.ImageStr)" class="mx-auto" style="max-height:400px;" />
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Created_at)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Created_at)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Modiftied_at)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Modiftied_at)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary px-4">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary px-4 mx-4">Back to List</a>
+</div>

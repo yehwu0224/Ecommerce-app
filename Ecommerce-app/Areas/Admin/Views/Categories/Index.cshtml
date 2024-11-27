@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Ecommerce_app.Models.Products.Department>
+
+@{
+    var j = 0;
+    ViewData["Title"] = "Index";
+}
+
+<h3>產品類別</h3>
+<h5 class="text-muted mb-4">Home / Departments / Index</h5>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <p>
+            <a class="btn btn-sm btn-primary px-3" asp-action="AddDepartment">+ 新增分類</a>
+        </p>
+        <table class="table table-striped accordion">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Modiftied_at)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model) {
+                j = j + 1;
+                <tr >
+                    <td data-bs-toggle ="collapse" href="@("#collapseExample" + j)" role="button">+</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created_at)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Modiftied_at)
+                    </td>
+                    <td>
+                        <a asp-action="EditDepartment" asp-route-id="@item.Id"><i class="bi bi-pencil text-secondary"></i></a>
+                        &nbsp;&nbsp;&nbsp;
+                        <a asp-action="DeleteDepartment" asp-route-id="@item.Id"><i class="bi bi-x-circle text-secondary"></i></a>
+                    </td>
+                </tr>
+                <tr class="collapse show" id="@("collapseExample" + j)">
+                    <td colspan="1"></td>
+                    <td colspan="4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>分類名稱</th>
+                                    <th>建立日期</th>
+                                    <th>修改日期</th>
+                                    <th><a asp-action="AddCategory" asp-route-depId="@item.Id" class="btn btn-sm btn-secondary">＋新增子分類</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(item.Categories != null)
+                                {
+                                    @foreach(var i in item.Categories)
+                                    {
+                                        <tr>
+                                            <td>@i.Name</td>
+                                            <td>@i.Created_at</td>
+                                            <td>@i.Modiftied_at</td>
+                                            <td>
+                                                <a asp-action="EditCategory" asp-route-id="@i.Id"><i class="bi bi-pencil text-dark"></i></a>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <a asp-action="DeleteCategory" asp-route-id="@i.Id"><i class="bi bi-x-circle text-dark"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+
+
+

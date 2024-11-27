@@ -1,0 +1,96 @@
+﻿@model IEnumerable<Ecommerce_app.Areas.Admin.Models.ViewModels.OptionViewModel>
+
+@{
+    var j = 0;
+    ViewData["Title"] = "Index";
+}
+
+<h3>產品規格</h3>
+<h5 class="text-muted mb-4">Home / Attributes / Index</h5>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <p>
+            <a class="btn btn-sm btn-primary px-3" asp-action="AddOption">+ 新增規格</a>
+        </p>
+        <table class="table table-striped accordion">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Modiftied_at)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                j = j + 1;
+                <tr>
+                    <td data-bs-toggle ="collapse" href="@("#collapseExample" + j)" role="button">+</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created_at)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Modiftied_at)
+                    </td>
+                    <td>
+                        <a asp-action="EditOption" asp-route-id="@item.Id"><i class="bi bi-pencil text-secondary"></i></a>
+                        &nbsp;&nbsp;&nbsp;
+                        <a asp-action="DeleteOption" asp-route-id="@item.Id"><i class="bi bi-x-circle text-secondary"></i></a>
+                    </td>
+                </tr>
+                <tr class="collapse show" id="@("collapseExample" + j)">
+                    <td colspan="1"></td>
+                    <td colspan="4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>名稱</th>
+                                    <th>建立日期</th>
+                                    <th>修改日期</th>
+                                    <th>
+                                        <a asp-action="AddOptionValue" asp-route-Option_Id="@item.Id" class="btn btn-sm btn-secondary">+規格係數</a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(item.optionValuesVM != null)
+                                {
+                                    @foreach(var i in item.optionValuesVM)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <img src="@Html.DisplayFor(modelItem => i.Image)" class="mx-auto" style="max-height:25px;" />
+                                            </td>
+                                            <td>@i.Value</td>
+                                            <td>@i.Created_at</td>
+                                            <td>@i.Modiftied_at</td>
+                                            <td>
+                                                <a asp-action="EditOptionValue" asp-route-id="@i.Id"><i class="bi bi-pencil text-secondary"></i></a> 
+                                                &nbsp;&nbsp;&nbsp;
+                                                <a asp-action="DeleteOptionValue" asp-route-id="@i.Id"><i class="bi bi-x-circle text-secondary"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+</div>
+

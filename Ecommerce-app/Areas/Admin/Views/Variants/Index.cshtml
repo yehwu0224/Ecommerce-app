@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Ecommerce_app.Areas.Admin.Models.ViewModels.VariantListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>SKU</h3>
+<h5 class="text-muted mb-4">Home / Variants / Index</h5>
+
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <table class="table" id="mytable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SKU)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Stock)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Modiftied_at)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>            
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SKU)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Created_at)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Modiftied_at)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="bi bi-pencil text-dark"></i></a> |
+                            <a asp-action="Details" asp-route-id="@item.Id" title="Details"><i class="bi bi-folder2 text-dark"></i></a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" title="Delete"><i class="bi bi-x-circle text-dark"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready( function () {
+            $('#mytable').DataTable( {
+                "pageLength": 10,
+                "lengthMenu": [ 5, 10, 25, 50 ]
+            }); 
+        } );     
+    </script>   
+}

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Ecommerce_app.Models.ViewModels.IndexViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p class="pt-4 text-muted">ROUTE：
+    <a asp-action="Index" asp-controller="Home" class="text-muted">主頁</a> /
+    <a asp-action="Index" asp-controller="Products" asp-route-filter="@ViewData["Head"]" class="text-muted">@ViewData["Head"]</a> /
+    <a src="#">所有商品</a>
+</p>
+
+<h1 class="mt-4 mb-4">@ViewData["Head"]</h1>
+
+<div class="d-flex flex-row flex-wrap m-2">
+    @foreach (var item in Model)
+    {
+        <div class="m-2">
+            <div class="card h-100 border-0" style="width: 15rem">
+                <img src="@Html.DisplayFor(modelItem => item.ImageStr)" class="card-img-top">
+                <div class="card-body text-center">
+                    <h6 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h6>
+                    <p class="card-text overflow-text">$ @Html.DisplayFor(modelItem => item.Price)</p>
+                    <p class="card-text overflow-text" style="font-size:small">@Html.DisplayFor(modelItem => item.Description)</p>
+                    <div class="text-end">
+                        @foreach (var imageStr in item.Colors!)
+                        {
+                            <img src="@imageStr" style="max-height:20px;max-width:20px;" />
+                        }
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-1 text-end text-muted py-1" style="font-size:12px">Details</div>
+                <a class="stretched-link" asp-action="Details" asp-route-id="@item.Id"></a> 
+            </div>
+        </div>
+    }
+</div>
+

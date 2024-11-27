@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Ecommerce_app.Models.Orders.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div>　</div>
+<h3>我的訂單</h3>
+<hr />
+
+@foreach (var item in Model)
+{
+    <table class="table border shadow-sm rounded p-2">
+        <thead class="">
+            <tr>
+                <th>訂單編號：#@Html.DisplayFor(modelItem => item.OrderId)</th>
+                <th>訂單日期：@Html.DisplayFor(modelItem => item.OrderDate)</th>
+                <th>金額</th>
+                <th>付款狀態</th>
+                <th>配送狀態</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2">
+                    @foreach (var citem in item.OrderItems!)
+                    {
+                        <p>@Html.DisplayFor(cartItem => citem.ProductName)</p>
+                    }
+                </td>
+                <td>
+                    <span style="color:red">NT$@Html.DisplayFor(modelItem => item.TotalAmount)</span>
+                </td>
+                <td>
+                    @if (item.Status == 1)
+                    {
+                        <p>已付款</p>
+                    }
+                    else
+                    {
+                        <p>未付款</p>
+                    }
+                </td>
+                <td>未出貨</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-orderId="@item.OrderId">訂單詳細資訊</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

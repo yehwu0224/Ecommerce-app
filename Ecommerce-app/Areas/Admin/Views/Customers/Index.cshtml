@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Ecommerce_app.Areas.Identity.Models.AppUser>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>客戶資訊</h3>
+<h5 class="text-muted mb-4">Home / Customers / Index</h5>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <table class="table" id="mytable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        E-Mail
+                    </th>
+                    <th>
+                        全名
+                    </th>
+                    <th>
+                        性別
+                    </th>
+                    <th>
+                        出生日
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Gender)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.DOB)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#mytable').DataTable({
+                "pageLength": 10,
+                "lengthMenu": [10, 25, 50]
+            });
+        });
+
+    </script>
+}

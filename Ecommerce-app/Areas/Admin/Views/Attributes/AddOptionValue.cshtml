@@ -1,0 +1,35 @@
+﻿@model Ecommerce_app.Models.Products.OptionValue
+
+@{
+    ViewData["Title"] = "AddOptionValue";
+}
+
+<h3>新增規格係數</h3>
+<h5 class="text-muted mb-4">Home / Attributes / AddOptionValue</h5>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddOptionValue">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OptionId" class="control-label"></label>
+                <input type="hidden" asp-for="OptionId" value="@ViewData["option_id"]" class="form-control" />
+                <input type="text" value="@ViewData["option_type"]" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary px-4" />
+                <a asp-action="Index" class="btn btn-secondary px-4 mx-4">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

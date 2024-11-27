@@ -1,0 +1,165 @@
+﻿@model Ecommerce_app.Models.Products.Product
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h3>修改產品資訊</h3>
+<h5 class="text-muted mb-4">Home / Products / Edit</h5>
+<hr />
+<div class="row">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+
+            <!---->
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control" style="height:150px"></textarea>
+                            <span asp-validation-for="Description" class="text-danger" id="editor01"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="Image" class="control-label"></label>
+                            <input type="file" id="myimg" name="myimg" value="@ViewData["img"]" class="form-control-file">
+                            <!-- <span asp-validation-for="Image" class="text-danger"></span> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <img id="preview" src="@ViewData["imageStr"]" style="max-height:200px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label class="control-label">Department</label>
+                    <select class="form-control" asp-for="DepartmentId" asp-items="ViewBag.departments" id="myDep"></select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label class="control-label">Category</label>
+                    <select class="form-control" asp-for="CategoryId" asp-items="ViewBag.categories" id="mySelect"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="Content" class="control-label"></label>
+                    <textarea asp-for="Content" class="form-control editor" id="editor" style="height:150px"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label class="control-label">Attributes</label>
+            @foreach (var item in ViewBag.attributes)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="attributes" value="@item.Id" />
+                    <label class="form-check-label">@item.Type</label>
+                </div>
+            }
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary px-4" />
+            <a asp-action="Index" class="btn btn-secondary px-4 mx-4">Back to List</a>
+        </div>
+
+    </form>
+</div>
+
+<style>
+    /*Textbox*/
+    .ck-editor__editable {
+        height: 300px;
+    }
+    /*Toolbar*/
+    .ck-editor__top {
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $('#myimg').on('change', function (e) {
+            const file = this.files[0];
+            const objectURL = URL.createObjectURL(file);    // 使用 createObjectURL 產生圖片url
+
+            $('#preview').attr('src', objectURL);
+        });
+
+        $(document).ready(function (e) {
+            $.getJSON("/Admin/Products/OnGetCategories?dep_id=" + $('#myDep').val(), function (data) {
+                $('#mySelect').empty(); // 清空select列表
+                $.each(data, function (i, item) {
+                    $('#mySelect').append($('<option>', {
+                        value: item.value,
+                        text: item.text
+                    }));
+                });
+            });
+        });
+
+        $('#myDep').on('change', function (e) {
+            $.getJSON("/Admin/Products/OnGetCategories?dep_id=" + $(this).val(), function (data) {
+                $('#mySelect').empty(); // 清空select列表
+                $.each(data, function (i, item) {
+                    $('#mySelect').append($('<option>', {
+                        value: item.value,
+                        text: item.text
+                    }));
+                });
+            });
+        });
+
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}
+
+
+

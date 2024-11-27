@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Ecommerce_app.Areas.Admin.Models.ViewModels.ProductListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>產品資訊</h3>
+<h5 class="text-muted mb-4">Home / Products / Index</h5>
+
+
+
+<!--<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name:
+            <input type="text" name="SearchString"/>
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-action="Index">Back to full List</a>
+        </p>
+    </div>
+</form>>-->
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <p>
+            <a asp-action="Create" class="btn btn-sm btn-primary px-3">+ 新增產品資訊</a>
+        </p>
+        <table class="table" id="mytable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ImageStr)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Department)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Count)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Modiftied_at)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            <img src="@Html.DisplayFor(modelItem => item.ImageStr)" class="mx-auto" style="max-height:75px;" />
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Department)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Category)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Created_at)
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.Modiftied_at)
+                        </td>
+                        <td class="align-middle">
+                            <a asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="bi bi-pencil text-dark"></i></a> |
+                            <a asp-action="Details" asp-route-id="@item.Id" title="Details"><i class="bi bi-folder2 text-dark"></i></a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" title="Delete"><i class="bi bi-x-circle text-dark"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div> 
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready( function () {
+            $('#mytable').DataTable( {
+                "pageLength": 5,
+                "lengthMenu": [ 5, 10, 25, 50 ]
+            }); 
+        } );
+        
+    </script>   
+}

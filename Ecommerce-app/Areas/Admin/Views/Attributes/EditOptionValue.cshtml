@@ -1,0 +1,52 @@
+﻿@model Ecommerce_app.Models.Products.OptionValue
+
+@{
+    ViewData["Title"] = "EditOptionValue";
+}
+
+<h3>更新規格係數</h3>
+<h5 class="text-muted">Home / Departments / EditOptionValue</h5>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditOptionValue" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="OptionId" />
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" id="myimg" name="myimg" class="form-control-file">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <img id="preview" style="max-height:200px;" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary px-4" />
+                <a asp-action="Index" class="btn btn-secondary px-4 mx-4">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#myimg').on('change', function (e) {
+            const file = this.files[0];
+            const objectURL = URL.createObjectURL(file);    // 使用 createObjectURL 產生圖片url
+
+            $('#preview').attr('src', objectURL);
+        });
+    </script>
+}
