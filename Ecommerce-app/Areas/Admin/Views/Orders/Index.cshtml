@@ -22,10 +22,10 @@
                         @Html.DisplayNameFor(model => model.ReceiverName)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.TotalAmount)
+                        @Html.DisplayNameFor(model => model.Status)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Status)
+                        @Html.DisplayNameFor(model => model.TotalAmount)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Created_at)
@@ -46,17 +46,17 @@
                             @Html.DisplayFor(modelItem => item.ReceiverName)
                         </td>
                         <td class="align-middle">
-                            @Html.DisplayFor(modelItem => item.TotalAmount)
-                        </td>
-                        <td class="align-middle">
                             @if (item.Status == 1)
                             {
-                                <span>已付款</span>
+                                <span class="badge bg-success">已付款</span>
                             }
                             else
                             {
-                                <span>未付款</span>
+                                <span class="badge bg-secondary">處理中</span>
                             }
+                        </td>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.TotalAmount)
                         </td>
                         <td class="align-middle">
                             @Html.DisplayFor(modelItem => item.Created_at)

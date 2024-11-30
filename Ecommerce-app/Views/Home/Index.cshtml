@@ -2,17 +2,31 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
-    <img class="m-3 rounded-2 w-100" src="~/images/cover.jpg">
+<div class="m-3">
+    <img class="rounded-2 mw-100" src="~/images/cover.jpg">
 </div>
-<div class="row">
-    <div class="col-6">
+<div class="m-3 text-center text-muted">
+    <div class="col"><hr /></div>
+    <div class="col">FEATURED ITEMS</div>
+    <div class="col"><hr /></div>
+</div>
+<div class="row m-3">
+    <div class="col" style="padding-left: 0px;"><img class="rounded-2 mw-100" src="~/images/men.jpg"></div>
+    <div class="col" style="padding-right: 0px;"><img class="rounded-2 mw-100" src="~/images/women.jpg"></div>
+</div>
+<div class="m-3 text-center text-muted">
+    <div class="col"><hr /></div>
+    <div class="col">ABOUT ME</div>
+    <div class="col"><hr /></div>
+</div>
+<div class="row m-3 align-items-center">
+    <div class="col-4">
         <div class="text-center">
-            <h1 class="display-4">Welcome</h1>
-            <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+            <img class="rounded-2" style="max-height: 50px" src="~/images/logo1.jpg">
+            <p class="text-muted">Building Web apps with ASP.NET Core.</p>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-8">
         <div class="px-0 rounded" id="map"></div>
     </div>
 </div>
@@ -31,7 +45,7 @@
             zoomControl: true , // 是否秀出 - + 按鈕
         }).addTo(map);
         const marker = L.marker(center).addTo(map)
-            .bindPopup('我在這裡')
+            .bindPopup('LiFe stl.')
             .openPopup();
     </script>
 }
