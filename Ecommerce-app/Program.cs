@@ -14,7 +14,8 @@ namespace Ecommerce_app
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<EcommerceAppContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             builder.Services.AddDbContext<UserContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
