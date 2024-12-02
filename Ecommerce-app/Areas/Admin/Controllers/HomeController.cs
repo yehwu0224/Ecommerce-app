@@ -29,8 +29,8 @@ namespace Ecommerce_app.Areas.Admin.Controllers
             var revenue = _context.Order.Where(x => x.Created_at == DateTime.Today)
                             .Sum(x => x.TotalAmount);
 
-            var recentlyOrder = _context.Order.OrderBy(x => x.OrderDate).Take(5).ToList();
-            var products = _context.Product.OrderBy(x => x.Created_at).Take(3).ToList();
+            var recentlyOrder = _context.Order.OrderByDescending(x => x.OrderDate).Take(5).ToList();
+            var products = _context.Product.OrderBy(x => x.Created_at).Take(4).ToList();
             var topSales = new List<ProductVM>();
             foreach(var item in products)
             {
