@@ -114,7 +114,8 @@ namespace Ecommerce_app.Controllers
                     catch(Exception ex)
                     {
                         TempData["errorMsg"] = ex.Message;
-                        return RedirectToAction("Index", "Cart");
+                        return Json(new { redirectToUrl = Url.Action("Index", "Cart") });
+                        //return RedirectToAction("Index", "Cart");
                     }
                 }
             }
@@ -271,8 +272,8 @@ namespace Ecommerce_app.Controllers
                 TotalAmount = totalAmount,
                 ItemName = itemStr,
                 TradeDesc = "null",
-                ReturnURL = $"{website}/api/Order/Payment",
-                OrderResultURL = $"{website}/Order",
+                ReturnURL = $"https://{website}/api/Order/Payment",
+                OrderResultURL = $"https://{website}/Order",
                 ChoosePayment = "Credit",
                 EncryptType = 1,
             };

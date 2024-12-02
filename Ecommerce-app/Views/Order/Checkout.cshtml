@@ -134,8 +134,9 @@
                         console.log("success");
                     },
                     error: function (err) { 
-                        console.log("error");
                         e.preventDefault();
+                        console.log("error");
+                        window.location.href = response.redirectToUrl;
                     },
                 });
             }
