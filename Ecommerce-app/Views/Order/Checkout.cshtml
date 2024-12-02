@@ -124,10 +124,11 @@
 
         function createorder(e) {
             if ($('#form1').valid()) {
+                let url = location.origin;
                 let formData = $("#form1").serialize();
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:5050/api/Order/CreateOrder',
+                    url: url + '/api/Order/CreateOrder',
                     data: formData,
                     success: function (res) {
                         console.log("success");
