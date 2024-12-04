@@ -2,7 +2,7 @@
 This project was bootstrapped with [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet)
 
 ## About
-![](https://imgur.com/Cp3NSGt.jpg)
+![](https://imgur.com/M1xInou.jpg)
 
 使用 `ASP.NET Core` 建立電商網頁平台專案，配合會員系統，建立平台前後台
 - 前台為商店頁面，用戶可瀏覽商品頁面，並使用購物車進行結帳流程
