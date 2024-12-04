@@ -20,6 +20,7 @@ Demo is published at <https://ecommerce-app-5v6j.onrender.com/>
 - 會員系統建立，區分平台前後台
 - redis 實踐購物車系統
 - 第三方金流串接
+- Docker 容器化應用
 
 ## Architecture 
 - 平台架構
