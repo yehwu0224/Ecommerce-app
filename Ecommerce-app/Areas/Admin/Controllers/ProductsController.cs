@@ -171,17 +171,11 @@ namespace Ecommerce_app.Areas.Admin.Controllers
             {
                 try
                 {
-                    if (myimg != null)
+                    // 如果沒有上傳圖片，則不更新圖片欄位
+                    if (myimg == null)
                     {
-                        product.Image = MyAppHelper.ImageToByteArray(myimg);
+                        _context.Entry(product).Property(p => p.Image).IsModified = false;
                     }
-                    else
-                    {
-                        product.Image = product.Image;
-                    }
-
-                    //var options = _context.Option.Where(x => attributes.Contains(x.Id)).ToList();
-                    //product.Options = options;
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();

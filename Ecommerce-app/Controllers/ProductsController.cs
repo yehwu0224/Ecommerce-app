@@ -25,9 +25,15 @@ namespace Ecommerce_app.Controllers
             _connectionMultiplexer = multiplexer;
         }
 
+        /// <summary>
+        /// 產品列表頁面
+        /// </summary>
+        /// <param name="filter">篩選條件</param>
+        /// <returns>產品列表頁面</returns>
         public async Task<IActionResult> Index(string? filter)
         {
-            var products = await _context.Product
+            // 建立產品查詢
+            var query = _context.Product
                             .Include(e => e.Department)
                             .Include(e => e.Category)
                             .Include(e => e.Variants)!
@@ -36,57 +42,48 @@ namespace Ecommerce_app.Controllers
                             .Include(e => e.Variants)!
                                 .ThenInclude(e => e.VariantValues)!
                                     .ThenInclude(e => e.OptionValue)
-                            .ToListAsync();
-                                
+                            .AsQueryable();
 
+            // 應用篩選條件
             if (!String.IsNullOrEmpty(filter))
             {
-                products = products.Where(s => s.Department!.Name == filter).ToList();
-                ViewData["Head"] = filter;
+                query = query.Where(s => s.Department!.Name == filter);
+                ViewData["Head"] = filter; // 設定頁面標題
             }
             else
             {
                 ViewData["Head"] = "所有商品";
             }
 
-            var viewModel = new List<IndexViewModel>();
-            foreach(var item in products)
-            {
-                // 取得一個商品的所有顏色選項（ 下面以Distinct()去除重複 ）
-                var colors = new List<string>();
-                foreach (var variant in item.Variants!)
-                {
-                    var image = variant.VariantValues?.Find(x => x.Option?.Type == "顏色")!.OptionValue!.Image;
-                    if(image != null)
-                    {
-                        colors.Add(MyAppHelper.ViewImage(image));
-                    }
-                }
+            // 執行查詢並取得結果
+            var products = await query.ToListAsync();
 
-                // 產品描述format
-                if (item.Description != null){
-                    var maxlength = item.Description.Length < 42 ? item.Description.Length : 42;
-                    item.Description = maxlength < 42 ? 
-                        item.Description.Substring(0, maxlength) : item.Description.Substring(0, maxlength) + "...";
-                }
-                
-                var viewModelItem = new IndexViewModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Description = item.Description,
-                    Price = item.Price,
-                    ImageStr = MyAppHelper.ViewImage(item.Image!),
-                    Department = item.Department!.Name,
-                    Category = item.Category!.Name,
-                    Colors = colors.Distinct().ToList()
-                };
-                viewModel.Add(viewModelItem);
-            }
+            // 建立視圖模型
+            var viewModel = products.Select(item => new IndexViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description?.Length > 42 ? item.Description.Substring(0, 42) + "..." : item.Description,
+                Price = item.Price,
+                ImageStr = MyAppHelper.ViewImage(item.Image!),
+                Department = item.Department!.Name,
+                Category = item.Category!.Name,
+                // 取得顏色選項
+                Colors = item.Variants!.SelectMany(v => v.VariantValues!)
+                                    .Where(v => v.Option?.Type == "顏色")
+                                    .Select(v => MyAppHelper.ViewImage(v.OptionValue!.Image!))
+                                    .Distinct()
+                                    .ToList() 
+            }).ToList();
 
             return View(viewModel);
         }
 
+        /// <summary>
+        /// 顯示產品詳細資料頁面。
+        /// </summary>
+        /// <param name="id">產品編號</param>
+        /// <returns>產品詳細資料頁面</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -111,44 +108,49 @@ namespace Ecommerce_app.Controllers
             {
                 return NotFound();
             }
-            else
-            {
-                var album = new List<string>();
-                var colors = new List<ColorModel>();
-                foreach (var variant in product.Variants!)
-                {
-                    var image1 = variant.Image!;
-                    var colorImage = variant.VariantValues?.Find(x => x.Option?.Type == "顏色")!.OptionValue!.Image;
-                    var colorValue = variant.VariantValues?.Find(x => x.Option?.Type == "顏色")!.OptionValue!.Value;
-                    if (colorImage != null)
-                    {
-                        var color = new ColorModel()
-                        {
-                            Value = colorValue,
-                            ImageStr = MyAppHelper.ViewImage(colorImage)
-                        };
-                        colors.Add(color);
-                        album.Add(MyAppHelper.ViewImage(image1));
-                    }
-                }
 
-                productVM = new DetailsViewModel
+            var album = new List<string>();
+            var colors = new List<ColorModel>();
+            foreach (var variant in product.Variants!)
+            {
+                var image1 = variant.Image!;
+                var colorImage = variant.VariantValues?.Find(x => x.Option?.Type == "顏色")!.OptionValue!.Image;
+                var colorValue = variant.VariantValues?.Find(x => x.Option?.Type == "顏色")!.OptionValue!.Value;
+                if (colorImage != null)
                 {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Department = product.Department!.Name,
-                    Description = product.Description,
-                    Content = product.Content,
-                    Price = product.Price,
-                    ImageStr = MyAppHelper.ViewImage(product.Image!),
-                    Colors = colors.DistinctBy(x => x.Value).ToList(),
-                    Album = album.Distinct().ToList()
-                };
+                    var color = new ColorModel()
+                    {
+                        Value = colorValue,
+                        ImageStr = MyAppHelper.ViewImage(colorImage)
+                    };
+                    colors.Add(color);
+                    album.Add(MyAppHelper.ViewImage(image1));
+                }
             }
+
+            productVM = new DetailsViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Department = product.Department!.Name,
+                Description = product.Description,
+                Content = product.Content,
+                Price = product.Price,
+                ImageStr = MyAppHelper.ViewImage(product.Image!),
+                Colors = colors.DistinctBy(x => x.Value).ToList(),
+                Album = album.Distinct().ToList()
+            };
 
             return View(productVM);
         }
 
+        /// <summary>
+        /// 取得指定顏色和尺寸的庫存編號。
+        /// </summary>
+        /// <param name="id">產品編號</param>
+        /// <param name="color">顏色</param>
+        /// <param name="size">尺寸</param>
+        /// <returns>庫存編號</returns>
         public async Task<IActionResult> GetSKU(int? id, string color, string size)
         {
             var variants = await _context.Variant.Where( x => x.ProductId == id)

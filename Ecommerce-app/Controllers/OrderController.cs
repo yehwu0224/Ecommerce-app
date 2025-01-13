@@ -32,31 +32,66 @@ namespace Ecommerce_app.Controllers
             _config = config;
         }
 
+        #region 個人訂單
+        /// <summary>
+        /// 取得使用者的訂單列表
+        /// </summary>
+        /// <returns>使用者的訂單列表</returns>
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var orders = await _context.Order.Where(x => x.UserId == user!.Id).Include(e => e.OrderItems).ToListAsync();
+            // 取得目前使用者
+            // var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
+
+            // 取得使用者的訂單列表，包括訂單項目
+            var orders = await _context.Order
+                .Where(x => x.UserId == userId)
+                .Include(e => e.OrderItems)
+                .ToListAsync();
+
+            // 回傳訂單列表
             return View(orders);
         }
 
+        /// <summary>
+        /// 取得訂單詳細資料
+        /// </summary>
+        /// <param name="orderId">訂單編號</param>
+        /// <returns>訂單詳細資料視圖</returns>
         public async Task<IActionResult> Details(string orderId)
         {
-            var order = await _context.Order.Include(e => e.OrderItems).FirstOrDefaultAsync(x => x.OrderId == orderId);
+            // 取得訂單資料，根據訂單編號查詢
+            var order = await _context.Order
+                .Include(e => e.OrderItems) 
+                .FirstOrDefaultAsync(x => x.OrderId == orderId);
+
+            // 返回訂單詳細資料視圖
             return View(order);
         }
+        #endregion
 
+        #region 結帳流程
+        /// <summary>
+        /// 處理結帳邏輯
+        /// </summary>
+        /// <returns>結帳視圖模型</returns>
         public async Task<IActionResult> Checkout()
         {
-            var orderId = Guid.NewGuid().ToString("N").Substring(0, 16);
-            var user = await _userManager.GetUserAsync(User);
-            var orderItems = GetOrderItems(user!.Id);
-            var totalAmount = GetTotalAmount(orderItems);
-            var itemStr = string.Join("#", orderItems.Select(x => x.ProductName));
 
+            var orderId = Guid.NewGuid().ToString("N").Substring(0, 16);    // 產生訂單編號(16碼)
+            var user = await _userManager.GetUserAsync(User); // 取得目前使用者
+            var orderItems = GetOrderItems(user!.Id);         // 取得使用者的訂單項目
+            var totalAmount = GetTotalAmount(orderItems);     // 取得訂單總額
+            var itemStr = string.Join("#", orderItems.Select(x => x.ProductName)); // 取得訂單項目名稱，使用 '#' 連接 (ecpay要求)
+
+            // 建立結帳視圖模型
             CheckoutViewModel checkoutVM = new CheckoutViewModel()
             {
+                // 建立綠界(ECPay)訂單內容
                 EcpayOrder = GetEcpayOrder(orderId, itemStr, totalAmount),
-                Order = new Order()
+
+                // 建立訂單資料
+                Order = new Order
                 {
                     OrderId = orderId,
                     UserId = user.Id,
@@ -66,62 +101,77 @@ namespace Ecommerce_app.Controllers
                 }
             };
 
+            // 回傳結帳視圖模型
             return View(checkoutVM);
         }
 
+
+        /// <summary>
+        /// 處理建立訂單的請求
+        /// </summary>
+        /// <param name="order">訂單資料</param>
+        /// <returns>建立訂單的結果</returns>
         [HttpPost]
         [Route("/api/Order/CreateOrder")]
         public async Task<IActionResult> CreateOrder(Order order)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                using (var transcation = await _context.Database.BeginTransactionAsync())
+                return NotFound();
+            }
+
+            using (var transcation = await _context.Database.BeginTransactionAsync())
+            {
+                try
                 {
-                    try
+                    if (OrderExists(order.OrderId!))
                     {
-                        if(OrderExists(order.OrderId!))
-                        {
-                            return BadRequest("訂單編號已存在");
-                        }
-
-                        // 更新商品庫存數量
-                        order.OrderItems = GetOrderItems(order.UserId!);
-                        foreach(var item in order.OrderItems)
-                        {
-                            var target = await _context.Variant.FirstOrDefaultAsync(m => m.SKU == item.SKU);
-                            if(target == null) 
-                            {
-                                throw new ArgumentException("product not existed");
-                            }
-                            else
-                            {
-                                await UpdateSKUStock(target, item.Quantity);
-                            }
-                        }
-
-                        order.OrderDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-                        order.Status = 0;
-                        order.PaymentType = "unknown";
-                        order.CheckMacValue = "";
-                        _context.Add(order);
-                        await _context.SaveChangesAsync();
-                        await transcation.CommitAsync();
-
-                        await _connectionMultiplexer.GetDatabase(0).KeyDeleteAsync(order.UserId); // 移除購物車
-
-                        return Ok();
+                        return BadRequest("訂單編號已存在");
                     }
-                    catch(Exception ex)
+
+                    // 更新商品庫存數量
+                    order.OrderItems = GetOrderItems(order.UserId!);
+                    foreach (var item in order.OrderItems)
                     {
-                        TempData["errorMsg"] = ex.Message;
-                        return Json(new { redirectToUrl = Url.Action("Index", "Cart") });
-                        //return RedirectToAction("Index", "Cart");
+                        var target = await _context.Variant.FirstOrDefaultAsync(m => m.SKU == item.SKU);
+                        if (target == null)
+                        {
+                            throw new ArgumentException("商品不存在");
+                        }
+                        else
+                        {
+                            await UpdateSKUStock(target, item.Quantity);
+                        }
                     }
+
+                    order.OrderDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    order.Status = 0;
+                    order.PaymentType = "unknown";
+                    order.CheckMacValue = "";
+                    _context.Add(order);
+                    await _context.SaveChangesAsync();
+                    await transcation.CommitAsync();
+
+                    await _connectionMultiplexer.GetDatabase(0).KeyDeleteAsync(order.UserId); // 移除購物車
+
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    TempData["errorMsg"] = ex.Message;
+                    return Json(new { redirectToUrl = Url.Action("Index", "Cart") });
+                    //return RedirectToAction("Index", "Cart");
                 }
             }
-            return NotFound();
+
         }
 
+        /// <summary>
+        /// 更新庫存數量，處理庫存不足或資料庫更新衝突的情況。
+        /// </summary>
+        /// <param name="variant">庫存變體</param>
+        /// <param name="quantity">更新的數量</param>
+        /// <returns>Task</returns>
         public async Task UpdateSKUStock(Variant variant, int quantity)
         {
             bool retry;
@@ -130,7 +180,7 @@ namespace Ecommerce_app.Controllers
                 retry = false;
                 try
                 {
-                    if(variant.Stock >= quantity)
+                    if (variant.Stock >= quantity)
                     {
                         variant.Stock -= quantity;
                         _context.Update(variant);
@@ -138,18 +188,18 @@ namespace Ecommerce_app.Controllers
                     }
                     else
                     {
-                        throw new ArgumentException("Stock unavailable.");
+                        throw new ArgumentException("庫存貨量不足");
                     }
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
                     retry = true;
                     var exEntry = ex.Entries.Single();
-                    var proposeValues = exEntry.CurrentValues;
+                    // var proposeValues = exEntry.CurrentValues;
                     var databaseValues = exEntry.GetDatabaseValues();
-                    if(databaseValues == null)
+                    if (databaseValues == null)
                     {
-                        throw new ArgumentException("Unable to save. The product was deleted by another user.");
+                        throw new ArgumentException("商品資訊不存在");
                     }
                     else
                     {
@@ -161,9 +211,15 @@ namespace Ecommerce_app.Controllers
                     }
                 }
             }
-            while(retry);
+            while (retry);
         }
 
+
+        /// <summary>
+        /// 處理綠界(ECPay)付款回傳的請求
+        /// </summary>
+        /// <param name="myform">綠界(ECPay)付款回傳的表單資料</param>
+        /// <returns>Http 回應訊息</returns>
         [HttpPost]
         [AllowAnonymous]
         [Route("/api/Order/Payment")]
@@ -298,6 +354,6 @@ namespace Ecommerce_app.Controllers
         {
             return _context.Order.Any(e => e.OrderId == orderId);
         }
-
+        #endregion
     }
 }

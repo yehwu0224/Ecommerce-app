@@ -31,6 +31,10 @@ namespace Ecommerce_app.Controllers
             _connectionMultiplexer = multiplexer;
         }
 
+        /// <summary>
+        /// 顯示購物車內容。
+        /// </summary>
+        /// <returns>購物車視圖模型。</returns>
         public IActionResult Index()
         {
             if (HttpContext.User.Identity?.IsAuthenticated == false)
@@ -71,6 +75,12 @@ namespace Ecommerce_app.Controllers
             return View(myCart);
         }
 
+        /// <summary>
+        /// 將商品加入購物車
+        /// </summary>
+        /// <param name="sku">商品編號</param>
+        /// <param name="quantity">加入購物車的數量</param>
+        /// <returns>加入購物車的結果</returns>
         [HttpPost]
         [Route("api/Cart/AddtoCart")]
         public async Task<IActionResult> AddtoCart(string sku, int quantity)
@@ -115,6 +125,12 @@ namespace Ecommerce_app.Controllers
             }
         }
 
+        /// <summary>
+        /// 移除購物車中的商品。
+        /// </summary>
+        /// <param name="sku">商品的庫存編號。</param>
+        /// <param name="quantity">商品的數量。</param>
+        /// <returns>重新導向至購物車頁面。</returns>
         public async Task<IActionResult> RemoveItem (string sku, int quantity)
         {
             var userId = _userManager.GetUserId(User);
