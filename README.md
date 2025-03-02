@@ -1,5 +1,5 @@
 # ASP.NET Core 電商網站平台
-This project was bootstrapped with [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet)
+This ecommerce app is built using ASP.NET Core and Entity Framework.
 
 ## About
 ![](https://imgur.com/M1xInou.jpg)
