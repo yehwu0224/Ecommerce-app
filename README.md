@@ -1,4 +1,4 @@
-# ASP.NET Core 電商網站平台
+# ASP.NET Core Ecommerce-app
 This ecommerce app is built using ASP.NET Core and Entity Framework.
 
 ## About
