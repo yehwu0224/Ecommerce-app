@@ -37,6 +37,7 @@ namespace Ecommerce_app.Controllers
         /// 取得使用者的訂單列表
         /// </summary>
         /// <returns>使用者的訂單列表</returns>
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             // 取得目前使用者
