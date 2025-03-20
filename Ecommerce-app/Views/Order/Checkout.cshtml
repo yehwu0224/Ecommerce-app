@@ -109,7 +109,7 @@
 <form method="post" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" id="EcpayForm" name="EcpayForm" role="form">
     @foreach(var item in Model.EcpayOrder!.Keys.ToList())
     {
-        <input type="text" name="@item" value="@Model.EcpayOrder[item]" />
+        <input type="hidden" name="@item" value="@Model.EcpayOrder[item]" />
     }
 </form>
 
