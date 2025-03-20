@@ -106,6 +106,7 @@ namespace Ecommerce_app.Controllers
             return View(checkoutVM);
         }
 
+        [AllowAnonymous]
         public IActionResult PayResult() {
             return View();
         }
