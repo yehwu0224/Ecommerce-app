@@ -335,7 +335,7 @@ namespace Ecommerce_app.Controllers
                 ItemName = itemStr,
                 TradeDesc = "null",
                 ReturnURL = $"https://{website}/api/Order/Payment",
-                OrderResultURL = $"https://{website}/PayResult",
+                OrderResultURL = $"https://{website}/Order/PayResult",
                 ChoosePayment = "Credit",
                 EncryptType = 1,
             };
