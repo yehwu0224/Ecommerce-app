@@ -106,6 +106,10 @@ namespace Ecommerce_app.Controllers
             return View(checkoutVM);
         }
 
+        public IActionResult PayResult() {
+            return View();
+        }
+
 
         /// <summary>
         /// 處理建立訂單的請求
@@ -330,7 +334,7 @@ namespace Ecommerce_app.Controllers
                 ItemName = itemStr,
                 TradeDesc = "null",
                 ReturnURL = $"https://{website}/api/Order/Payment",
-                OrderResultURL = $"https://{website}/Order",
+                OrderResultURL = $"https://{website}/PayResult",
                 ChoosePayment = "Credit",
                 EncryptType = 1,
             };
